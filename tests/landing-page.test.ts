@@ -1,6 +1,8 @@
+import { nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 
 import App from '../src/App.vue'
+import BackToTopButton from '../src/components/landing/BackToTopButton.vue'
 import { RESULTS_SECTION_ID, FEATURES_SECTION_ID, HOME_SECTION_ID } from '../src/lib/constants/landing/landing'
 import { landingContent } from '../src/lib/content/landing/landing'
 import { validateProductionSystemUrl } from '../src/lib/config/buildEnvironment'
@@ -88,5 +90,26 @@ describe('landing page mobile navigation', () => {
     await wrapper.get('a[href="#resultados"]').trigger('click')
     expect(menuButton.attributes('aria-expanded')).toBe('false')
     expect(wrapper.get('a.site-nav__cta').attributes('aria-label')).toBe('Ingresar al sistema contable')
+  })
+})
+
+describe('back to top navigation', () => {
+  it('clears hash and scrolls to top on click', async () => {
+    const replaceStateSpy = jest.spyOn(window.history, 'replaceState')
+    const scrollToSpy = jest.spyOn(window, 'scrollTo').mockImplementation(() => {})
+    window.location.hash = '#resultados'
+
+    const wrapper = mount(BackToTopButton)
+    Object.defineProperty(window, 'scrollY', { value: 600, writable: true })
+    window.dispatchEvent(new Event('scroll'))
+    await nextTick()
+
+    await wrapper.get('button.back-to-top').trigger('click')
+
+    expect(scrollToSpy).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' })
+    expect(replaceStateSpy).toHaveBeenCalledWith(null, '', window.location.pathname + window.location.search)
+
+    replaceStateSpy.mockRestore()
+    scrollToSpy.mockRestore()
   })
 })
