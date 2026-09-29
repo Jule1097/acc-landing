@@ -10,10 +10,25 @@ function updateVisibility() {
   isVisible.value = window.scrollY > BACK_TO_TOP_THRESHOLD
 }
 
-function scrollToTop() {
-  const behavior = window.matchMedia(REDUCED_MOTION_MEDIA_QUERY).matches ? 'auto' : 'smooth'
+function clearUrlHash() {
+  if (!window.location.hash) {
+    return
+  }
 
-  window.scrollTo({ top: 0, behavior })
+  window.history.replaceState(null, '', window.location.pathname + window.location.search)
+}
+
+function resolveScrollBehavior(): ScrollBehavior {
+  if (typeof window.matchMedia === 'function' && window.matchMedia(REDUCED_MOTION_MEDIA_QUERY).matches) {
+    return 'auto'
+  }
+
+  return 'smooth'
+}
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: resolveScrollBehavior() })
+  clearUrlHash()
 }
 
 onMounted(() => {
