@@ -9,7 +9,7 @@ pnpm-debug.log*
 
 .env
 .env.*
-!.env.example
+.env.example
 
 .DS_Store
 Thumbs.db
@@ -18,3 +18,4 @@ Thumbs.db
 !.vscode/extensions.json
 
 .agents
+.impeccable
