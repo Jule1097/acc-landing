@@ -1,21 +1,25 @@
 <script setup lang="ts">
-import { product } from '@/lib/product/product'
+import LandingFooter from '@/components/landing/LandingFooter.vue'
+import BackToTopButton from '@/components/landing/BackToTopButton.vue'
+import FeatureSection from '@/components/landing/FeatureSection.vue'
+import LandingHero from '@/components/landing/LandingHero.vue'
+import LandingNavigation from '@/components/landing/LandingNavigation.vue'
+import ResultsSection from '@/components/landing/ResultsSection.vue'
+import { getOptionalSystemUrl } from '@/lib/config/runtime'
+
+const props = defineProps<{ systemUrl?: string }>()
+const systemUrl = props.systemUrl || getOptionalSystemUrl()
 </script>
 
 <template>
-  <main class="min-h-screen bg-slate-950 text-white">
-    <section class="mx-auto flex min-h-screen max-w-6xl items-center px-6 py-24 lg:px-8">
-      <div class="max-w-3xl">
-        <p class="mb-6 text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">
-          {{ product.category }}
-        </p>
-        <h1 class="text-5xl font-semibold tracking-tight sm:text-7xl">
-          Tus números, más claros.
-        </h1>
-        <p class="mt-8 max-w-2xl text-lg leading-8 text-slate-300">
-          {{ product.name }} te ayuda a entender y administrar tu negocio desde un solo lugar.
-        </p>
-      </div>
-    </section>
-  </main>
+  <div class="landing-page">
+    <LandingNavigation :system-url="systemUrl" />
+    <main>
+      <LandingHero />
+      <FeatureSection />
+      <ResultsSection />
+    </main>
+    <LandingFooter />
+    <BackToTopButton />
+  </div>
 </template>
